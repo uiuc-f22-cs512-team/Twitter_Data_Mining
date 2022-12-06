@@ -4,9 +4,13 @@ import json
 import pandas as pd
 
 class Utils():
-    def __init__(self):
+    def __init__(self, max_results = 50):
         self.bearer_token = "AAAAAAAAAAAAAAAAAAAAAKEUhgEAAAAAYo%2FYh5Jpb%2Fau8yaOs%2BO1bojGfFY%3DjkemdnofEolHLUwEzS7STSxqbrheB3FwKlldyCPHia9bF4tUcU"
+        self.max_results = max_results
 
+    def set_user_id(self, user_id):
+        self.user_id = user_id
+        
     # Default user_id is of elonmusk's account.
     def get_tweet_url(self, user_id=44196397):
         return "https://api.twitter.com/2/users/{}/tweets".format(user_id)
@@ -26,7 +30,7 @@ class Utils():
                 "tweet.fields": "conversation_id,author_id,in_reply_to_user_id,referenced_tweets,created_at,lang,text,entities,id,source,withheld",
                 "expansions" : "author_id,in_reply_to_user_id,referenced_tweets.id", 
                 "user.fields" : "name,username",
-                "max_results" : "10"
+                "max_results" : str(self.max_results)
                 }
         elif (req_type == "follower" or req_type == "following"):
             return {
@@ -56,10 +60,10 @@ class Utils():
 
 
 
-test_utils = Utils()
-url = test_utils.get_tweet_url()
-params = test_utils.get_params("tweet")
-json_response = test_utils.connect_to_endpoint(url, params)
-print(json.dumps(json_response, indent=4, sort_keys=True))
+# test_utils = Utils()
+# url = test_utils.get_tweet_url()
+# params = test_utils.get_params("tweet")
+# json_response = test_utils.connect_to_endpoint(url, params)
+# print(json.dumps(json_response, indent=4, sort_keys=True))
 
     

@@ -5,7 +5,7 @@ class User():
         self.neighbors = []
 
         # Read tweet data that written by Utils class
-        with open("test.json", "r") as f:
+        with open("data/" + str(self.user_id) + ".json", "r") as f:
             self.data = json.load(f)
             self.tweets = self.data["data"]
 
@@ -40,17 +40,13 @@ class User():
         # Update data
         self.data["neighbors"] = self.neighbors
         # Write file
-        with open("test.json", "w") as f:
+        with open("data/" + str(self.user_id) + ".json", "w") as f:
             json.dump(self.data, f)
 
 
     def isPositive(self, tweet):
         #TODO: Check
         return True
-
-
-user = User(1234)
-user.save_neighbors()
 
 
 # print(user.tweets[0]['entities']['mentions'])
