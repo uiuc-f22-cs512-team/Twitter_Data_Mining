@@ -13,7 +13,9 @@ class User():
     def __get_mentions(self):
         self.mention_dict = {}
         for tweet in self.tweets:
-            if ("entities" in tweet):
+            # Get the sentiment of this tweet
+            isPositive = self.isPositive(tweet)
+            if ("entities" in tweet and isPositive):
                 tweet_entities = tweet["entities"]
                 if ("mentions" in tweet_entities):
                     tweet_mention = tweet_entities["mentions"]
@@ -41,6 +43,10 @@ class User():
         with open("test.json", "w") as f:
             json.dump(self.data, f)
 
+
+    def isPositive(self, tweet):
+        #TODO: Check
+        return True
 
 
 user = User(1234)
