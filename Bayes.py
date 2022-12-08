@@ -8,7 +8,6 @@ def print_paramter_vals(laplace, pos_prior):
     print(f"Positive prior {pos_prior}")
 
 
-
 def generateWordDict(train_set, train_labels, isPos):
     wordDict = {}
     for i in range(len(train_set)):
@@ -38,8 +37,7 @@ def calculateProb(wordMap, laplace):
 
     return probMap, unk_prob
 
-
-def naiveBayes(train_set, train_labels, dev_set, laplace=0.01, pos_prior=0.95, silently=False):
+def naiveBayes(train_set, train_labels, dev_set, laplace=0.01, pos_prior=0.5, silently=False):
     print_paramter_vals(laplace, pos_prior)
     positiveWordMap = generateWordDict(train_set, train_labels, 1)
     negativeWordMap = generateWordDict(train_set, train_labels, 0)
@@ -99,7 +97,7 @@ def generateBigramDict(train_set, train_labels, isPos):
                 bigramDict[bigram] = 1
     return bigramDict
 
-def bigramBayes(train_set, train_labels, dev_set, unigram_laplace=0.001, bigram_laplace=0.005, bigram_lambda=0.5, pos_prior=0.95, silently=False):
+def bigramBayes(train_set, train_labels, dev_set, unigram_laplace=0.001, bigram_laplace=0.005, bigram_lambda=0.5, pos_prior=0.5, silently=False):
     print_paramter_vals_bigram(
         unigram_laplace, bigram_laplace, bigram_lambda, pos_prior)
 
