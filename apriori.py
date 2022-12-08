@@ -108,3 +108,5 @@ def run():
             conv = True
         k += 1
         frequent_itemsets = [item[0] for item in frequent_set[k-1]] # frequent k-itemsets
+
+    return frequent_set # result
