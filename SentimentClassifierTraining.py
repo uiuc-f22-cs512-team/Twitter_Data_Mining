@@ -22,16 +22,23 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 
-
-def process_tweet_content(tweet):
-    tweet = Utils.clean_tweets(tweet)
-    tweet = Utils.convert_abbrev_in_text(tweet)
-    print("processed tweet: ", tweet)
+token = RegexpTokenizer(r'[a-zA-Z0-9]+')
+cv = CountVectorizer(stop_words='english',ngram_range = (1,1),tokenizer = token.tokenize)
 
 def load_data():
     tweets=pd.read_csv('./data/twitter_sentiment_noemoticon.csv',encoding='latin', 
                    names = ['sentiment','id','date','query','user','tweet'])
     return tweets
+
+def process_single_tweet_content(tweet):
+    tweet = Utils.clean_tweets(tweet)
+    tweet = Utils.convert_abbrev_in_text(tweet)
+    print("processed tweet: ", tweet)
+    df = pd.DataFrame([tweet], columns =['processed_tweets']) 
+    df['processed_tweets'] = df['processed_tweets'].astype('str')
+    df['processed_tweets'].apply(lambda x: x.split())
+    text_counts = cv.transform(df['processed_tweets'].values.astype('U'))
+    return text_counts
 
 def preprocess_data(tweets):    
     # sample a small debug dataset
@@ -72,34 +79,34 @@ def train_test_split_data(data):
     y_test=test_data['sentiment']
     return X_train, y_train, X_test, y_test
 
-
 def train_bayes_classifiers():
     tweets = load_data()
     data = preprocess_data(tweets)
     X_train, y_train, X_test, y_test = train_test_split_data(data)
 
-    # perform bigram bayes
-    predicted_labels_bigram = Bayes.bigramBayes(X_train, y_train, X_test)
+    # # perform bigram bayes
+    # predicted_labels_bigram = Bayes.bigramBayes(X_train, y_train, X_test)
 
-    # perform naive bayes
-    predicted_labels_naive = Bayes.naiveBayes(X_train, y_train, X_test)
+    # # perform naive bayes
+    # predicted_labels_naive = Bayes.naiveBayes(X_train, y_train, X_test)
 
-    # evaluate bigram bayes
-    accuracy, false_positive, false_negative, true_positive, true_negative = Utils.compute_accuracies(predicted_labels_bigram,y_test)
-    nn = len(y_test)
-    Utils.print_stats(accuracy, false_positive, false_negative, true_positive, true_negative, nn, "Bigram Bayes")
+    # # evaluate bigram bayes
+    # accuracy, false_positive, false_negative, true_positive, true_negative = Utils.compute_accuracies(predicted_labels_bigram,y_test)
+    # nn = len(y_test)
+    # Utils.print_stats(accuracy, false_positive, false_negative, true_positive, true_negative, nn, "Bigram Bayes")
 
-    # evaluate naive bayes
-    accuracy, false_positive, false_negative, true_positive, true_negative = Utils.compute_accuracies(predicted_labels_naive,y_test)
-    Utils.print_stats(accuracy, false_positive, false_negative, true_positive, true_negative, nn, "Naive Bayes")
+    # # evaluate naive bayes
+    # accuracy, false_positive, false_negative, true_positive, true_negative = Utils.compute_accuracies(predicted_labels_naive,y_test)
+    # Utils.print_stats(accuracy, false_positive, false_negative, true_positive, true_negative, nn, "Naive Bayes")
 
     # Tokenization
     data = shuffle(data).reset_index(drop=True)
     tokenized_data=data['processed_tweets'].apply(lambda x: x.split())
     tokenized_data.head(5)
 
-    token = RegexpTokenizer(r'[a-zA-Z0-9]+')
-    cv = CountVectorizer(stop_words='english',ngram_range = (1,1),tokenizer = token.tokenize)
+    # Fit Word token Count Vectorizer
+    # token = RegexpTokenizer(r'[a-zA-Z0-9]+')
+    # cv = CountVectorizer(stop_words='english',ngram_range = (1,1),tokenizer = token.tokenize)
     text_counts = cv.fit_transform(data['processed_tweets'].values.astype('U'))
 
     X=text_counts
@@ -126,6 +133,9 @@ def train_bayes_classifiers():
     return cnb
 
 def main():
-    train_bayes_classifiers()
+    model = train_bayes_classifiers()
+    X = process_single_tweet_content("Replying to @fr16nb Look ma, conversation!")
+    yh = model.predict(X)
+    print("prediction result: ", yh)
     
 main()
