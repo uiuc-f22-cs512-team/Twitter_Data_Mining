@@ -1,8 +1,10 @@
 import json
+import SentimentClassifierTraining
 class User():
-    def __init__(self, user_id):
+    def __init__(self, user_id, model):
         self.user_id = user_id
         self.neighbors = []
+        self.model = model
 
         # Read tweet data that written by Utils class
         with open("data/" + str(self.user_id) + ".json", "r") as f:
@@ -14,7 +16,7 @@ class User():
         self.mention_dict = {}
         for tweet in self.tweets:
             # Get the sentiment of this tweet
-            isPositive = self.isPositive(tweet)
+            isPositive = self.isPositive(tweet["text"])
             if ("entities" in tweet and isPositive):
                 tweet_entities = tweet["entities"]
                 if ("mentions" in tweet_entities):
@@ -24,11 +26,11 @@ class User():
                         self.mention_dict[mention["id"]] = to_add + 1
     
     # Select frequent users from mentions dictionary that exceed the threshold
-    def get_neighbors(self, threshold=0.05):
+    def get_neighbors(self, threshold=0.1):
         self.__get_mentions()
         sorted_items = sorted(self.mention_dict.items(), key=lambda x:x[1], reverse=True)
 
-        for i in range(int(len(sorted_items) * threshold) + 1):
+        for i in range(int(len(sorted_items) * threshold)):
             self.neighbors.append(sorted_items[i][0])
 
         return self.neighbors
@@ -46,7 +48,11 @@ class User():
 
     def isPositive(self, tweet):
         #TODO: Check
-        return True
+        # processed_tweet = 
+        processed_tweet = SentimentClassifierTraining.process_single_tweet_content(tweet)
+        result = self.model.predict(processed_tweet)
+        return result[0] == 1
+
 
 
 # print(user.tweets[0]['entities']['mentions'])

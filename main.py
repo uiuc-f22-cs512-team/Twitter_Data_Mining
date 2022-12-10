@@ -1,5 +1,6 @@
 import Utils
 import User
+import SentimentClassifierTraining
 
 import json
 import networkx as nx
@@ -9,7 +10,7 @@ import matplotlib.pyplot as plt
 
 # Graph object from networkx
 G = nx.Graph()
-
+sentiment_model = SentimentClassifierTraining.train_bayes_classifiers()
 # Start generating graph from this user
 initial_user_id = 44196397
 # Hash table to record whether a user has been visited before
@@ -20,9 +21,11 @@ queue.append(initial_user_id)
 visited.add(initial_user_id)
 
 utils = Utils.Utils()
-max_vertices = 30
+max_count = 30
+# number of users
+count = 0
 
-while (len(queue) > 0 and G.number_of_nodes() < max_vertices):
+while (len(queue) > 0 and count < max_count):
     # Select current user
     current_user_id = queue.pop(0)
     # Add current user to Graph
@@ -33,12 +36,13 @@ while (len(queue) > 0 and G.number_of_nodes() < max_vertices):
     url = utils.get_tweet_url()
     params = utils.get_params("tweet")
     json_response = utils.connect_to_endpoint(url, params)
+    count += 1
     # Use current user_id as file name to save data
     with open("data/" + str(current_user_id) + '.json', 'w') as f:
         json.dump(json_response, f)
 
     # Create User object and read tweet data
-    current_user = User.User(current_user_id)
+    current_user = User.User(current_user_id, sentiment_model)
     current_user.save_neighbors()
 
     for neighbor in current_user.neighbors:
@@ -48,7 +52,7 @@ while (len(queue) > 0 and G.number_of_nodes() < max_vertices):
         if not (neighbor in G.neighbors(current_user_id)) and neighbor != current_user_id:
             G.add_edge(current_user_id, neighbor)   
 
-nx.draw(G, with_label=True)
+nx.draw(G)
 plt.savefig("TestGraph.png")
 
     # Find neighbors

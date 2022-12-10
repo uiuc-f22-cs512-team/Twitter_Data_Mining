@@ -12,7 +12,7 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
 class Utils():
-    def __init__(self, max_results = 50):
+    def __init__(self, max_results = 100):
         self.bearer_token = "AAAAAAAAAAAAAAAAAAAAAKEUhgEAAAAAYo%2FYh5Jpb%2Fau8yaOs%2BO1bojGfFY%3DjkemdnofEolHLUwEzS7STSxqbrheB3FwKlldyCPHia9bF4tUcU"
         self.max_results = max_results
 
@@ -20,17 +20,17 @@ class Utils():
         self.user_id = user_id
         
     # Default user_id is of elonmusk's account.
-    def get_tweet_url(self, user_id=44196397):
-        return "https://api.twitter.com/2/users/{}/tweets".format(user_id)
+    def get_tweet_url(self):
+        return "https://api.twitter.com/2/users/{}/tweets".format(self.user_id)
 
     # It's strange because it seems I cannot find those users in Twitter by their username.
     # Maybe they're new users.
-    def get_follower_url(self, user_id=44196397):
-        return "https://api.twitter.com/2/users/{}/followers".format(user_id)
+    def get_follower_url(self):
+        return "https://api.twitter.com/2/users/{}/followers".format(self.user_id)
     
     # Get the current user's following list and it propagates forward.
-    def get_following_url(self, user_id=44196397):
-        return "https://api.twitter.com/2/users/{}/following".format(user_id)
+    def get_following_url(self):
+        return "https://api.twitter.com/2/users/{}/following".format(self.user_id)
 
     def get_params(self, req_type):
         if (req_type == "tweet"):

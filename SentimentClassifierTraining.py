@@ -138,4 +138,4 @@ def main():
     yh = model.predict(X)
     print("prediction result: ", yh)
     
-main()
+# main()
