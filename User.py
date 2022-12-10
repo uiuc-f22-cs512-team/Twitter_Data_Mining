@@ -9,7 +9,10 @@ class User():
         # Read tweet data that written by Utils class
         with open("data/" + str(self.user_id) + ".json", "r") as f:
             self.data = json.load(f)
-            self.tweets = self.data["data"]
+            if "data" in self.data:
+                self.tweets = self.data["data"]
+            else:
+                self.tweets = []
 
     # Get users that frequently appear in this user's tweets.
     def __get_mentions(self):

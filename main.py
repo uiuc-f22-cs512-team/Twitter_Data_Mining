@@ -21,7 +21,7 @@ queue.append(initial_user_id)
 visited.add(initial_user_id)
 
 utils = Utils.Utils()
-max_count = 30
+max_count = 100
 # number of users
 count = 0
 
