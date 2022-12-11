@@ -71,20 +71,19 @@ def find_unique_words(path):
                     unique_words.append(item)
     return unique_words
 
-def init_minsup(path, ratio=0.003):
+def init_minsup(path, ratio=0.01):
     num_of_words = 0
     with open(path, 'r') as file:
         for line in file:
             num_of_words += line.count(',')
-    minsup = int(num_of_words * ratio) #0.3%
+    minsup = int(num_of_words * ratio)
     return minsup
 
-def run():
+def run(path='data/tweets_history.csv', minsup=230):
     # initialization
-    path = 'data/tweets_history.csv'
-    order = find_unique_words(path) # 566 words
-    minsup = init_minsup(path) # 244
+    order = find_unique_words(path)
     Transactions = load_tweets(path, order)
+    minsup = init_minsup(path)
     candidates = {}
     frequent_set = {} # k-frequent_set
     k = 1
