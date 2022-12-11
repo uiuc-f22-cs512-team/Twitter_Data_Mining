@@ -7,7 +7,7 @@ class User():
         self.model = model
 
         # Read tweet data that written by Utils class
-        with open("data/" + str(self.user_id) + ".json", "r") as f:
+        with open("dataC/" + str(self.user_id) + ".json", "r") as f:
             self.data = json.load(f)
             if "data" in self.data:
                 self.tweets = self.data["data"]

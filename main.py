@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 G = nx.Graph()
 sentiment_model = SentimentClassifierTraining.train_bayes_classifiers()
 # Start generating graph from this user
-initial_user_id = 44196397
+initial_user_id = 17919972
 # Hash table to record whether a user has been visited before
 visited = set()
 # Use breath first search to propagate the graph
@@ -38,7 +38,7 @@ while (len(queue) > 0 and count < max_count):
     json_response = utils.connect_to_endpoint(url, params)
     count += 1
     # Use current user_id as file name to save data
-    with open("data/" + str(current_user_id) + '.json', 'w') as f:
+    with open("dataC/" + str(current_user_id) + '.json', 'w') as f:
         json.dump(json_response, f)
 
     # Create User object and read tweet data
@@ -53,7 +53,7 @@ while (len(queue) > 0 and count < max_count):
             G.add_edge(current_user_id, neighbor)   
 
 nx.draw(G)
-plt.savefig("TestGraph.png")
+plt.savefig("GraphC.png")
 
     # Find neighbors
 
